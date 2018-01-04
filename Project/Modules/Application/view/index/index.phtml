@@ -1,0 +1,19 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: petmi627
+ * Date: 29.12.17
+ * Time: 21:38
+ */
+
+?>
+
+
+<div class="jumbotron">
+    <h1 class="display-4"><?= $this->getPlugin('translator')->translate('application_welcome') ?>!</h1>
+    <p class="lead"><?= $this->getPlugin('translator')->translate('application_description') ?></p>
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="<?= $this->getPlugin('router')->getBaseUrl() ?>?action=shirts" role="button"><?= $this->getPlugin('translator')->translate('application_a_shirts') ?></a>
+    </p>
+</div>

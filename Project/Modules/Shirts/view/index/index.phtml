@@ -1,0 +1,88 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: petmi627
+ * Date: 31.12.17
+ * Time: 05:27
+ */
+?>
+
+<h1><?= $this->getPlugin('translator')->translate('shirts_welcome') ?></h1>
+
+<div id="results" class="row">
+
+</div>
+
+<br /><a class="btn btn-primary" href="<?= $this->getPlugin('router')->getBaseUrl() ?>?action=shirts-modify&method=add">
+    <?= $this->getPlugin('translator')->translate('shirts_label_add') ?>
+</a>
+
+<script>
+
+
+    $(document).ready(function(e) {
+        loadShirts()
+    });
+
+    function loadShirts() {
+        var language = getCookie("language");
+
+        $.ajax({
+            'url':  "<?= $this->getPlugin('router')->getBaseUrl() ?>",
+            'method': "GET",
+            'data': {
+                'action': 'rest',
+                'language': language
+            },
+            'success': function(data) {
+                $("#results").html($("<div>"));
+                $.each(data, function(index, value) {
+                    $("#results").append(
+                        $("<div>", {'class': 'col-md-4'}).append(
+                            $("<div>", {'class': 'card', 'onclick': "loadShirt(" + value.id + ")"}).append(
+                                $("<div>").html('<img class="card-img-top" src="'+ value.image + '" alt="Shirt" />'),
+                                $("<div>", {"class": 'card-body'}).append(
+                                    $("<h5>").html(value.name)
+                                )
+                            )
+                        )
+                    )
+                });
+            }
+        });
+    }
+
+    function loadShirt(id) {
+        var language = getCookie("language");
+
+        $.ajax({
+            'url':  "<?= $this->getPlugin('router')->getBaseUrl() ?>",
+            'method': "GET",
+            'data': {
+                'action': 'rest',
+                'q': id,
+                'language': language
+            },
+            'success': function(data) {
+                $("#results").html(
+                    $("<div>", {'class': 'col-md-12'}).append(
+                        $("<div>", {'class': 'well'}).append(
+                            $("<h2>").html(data.name),
+                            $("<div>", {'class': 'row'}).append(
+                                $("<div>", {'class': "col-md-4"}).html('<img class="card-img-top" src="'+ data.image + '" alt="Shirt" />'),
+                                $("<div>", {"class": 'card-body'}).append(
+                                    $("<h5>").html(data.name),
+                                    $("<p>").html("<?= $this->getPlugin('translator')->translate('shirts_label_id') ?>: " + data.id +
+                                        "<br /><?= $this->getPlugin('translator')->translate('shirts_label_price') ?>: " + data.price +
+                                        "$<br /><?= $this->getPlugin('translator')->translate('shirts_label_size') ?>: " + data.size),
+                                )
+                            ),
+                            $("<a>", {"class": "btn btn-primary", 'onclick': "loadShirts()"}).html("<?= $this->getPlugin('translator')->translate('shirts_label_back') ?>"),
+                        )
+                    )
+                )
+            }
+        });
+    }
+</script>
+

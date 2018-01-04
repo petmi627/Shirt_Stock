@@ -1,0 +1,59 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: petmi627
+ * Date: 29.12.17
+ * Time: 22:58
+ */
+
+?>
+<!doctype html>
+<html>
+<head>
+    <title>Shirt Stock</title>
+
+    <!-- Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Les Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="js/i18n.js" ></script>
+    <script src="js/function.js" ></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+            <a class="navbar-brand" href="<?= $this->getPlugin('router')->getBaseUrl() ?>">Shirt Stock</a>
+
+            <div class="media-right" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="changeLanguage('en')" href="#"><?= $this->getPlugin('translator')->translate('application_en') ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="changeLanguage('de')" href="#"><?= $this->getPlugin('translator')->translate('application_de') ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="changeLanguage('fr')" href="#"><?= $this->getPlugin('translator')->translate('application_fr') ?></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <br />
+        <br />
+        <?= $this->getContent() ?>
+        <hr />
+        <span>&copy; 2017 <?= date("- Y") ?> by Mike Peters</span>
+    </div>
+
+
+</body>
+</html>

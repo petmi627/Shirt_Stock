@@ -1,0 +1,192 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: petmi627
+ * Date: 02.01.18
+ * Time: 08:21
+ */
+
+?>
+
+<h1><?= $this->getPlugin('translator')->translate('shirts_label_add') ?></h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <form id="shirt_form" class="form-horizontal" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="rest">
+            <div class="form-group">
+                <label for="name_en"><?= $this->getPlugin('translator')->translate('shirts_label_name') ?> <?= $this->getPlugin('translator')->translate('application_en') ?></label>
+                <input type="text" class="form-control" id="name_en" name="name_en" placeholder="Yellow shirt">
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_name') ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="name_de"><?= $this->getPlugin('translator')->translate('shirts_label_name') ?> <?= $this->getPlugin('translator')->translate('application_de') ?></label>
+                <input type="text" class="form-control" id="name_de" name="name_de" placeholder="Gelbes T-shirt">
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_name') ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="name_fr"><?= $this->getPlugin('translator')->translate('shirts_label_name') ?> <?= $this->getPlugin('translator')->translate('application_fr') ?></label>
+                <input type="text" class="form-control" id="name_fr" name="name_fr" placeholder="T-shirt jaune">
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_name') ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="size"><?= $this->getPlugin('translator')->translate('shirts_label_size') ?></label>
+                <select class="form-control" id="size" name="size">
+                    <option>XS</option>
+                    <option>S</option>
+                    <option>M</option>
+                    <option>L</option>
+                    <option>XL</option>
+                    <option>XXL</option>
+                </select>
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_size') ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="price"><?= $this->getPlugin('translator')->translate('shirts_label_price') ?></label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="15,45">
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_price') ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="image"><?= $this->getPlugin('translator')->translate('shirts_label_image') ?></label>
+                <input type="file" class="form-control-file" id="image" name="image">
+                <span id="help-block"><?= $this->getPlugin('translator')->translate('shirts_help_image') ?></span>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary" value="<?= $this->getPlugin('translator')->translate('shirts_label_save_shirt') ?>" id="save_shirt" name="save_shirt">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(e) {
+        init();
+        var data = [];
+        var validation = false;
+
+        data['size'] = $("#size").val();
+
+        $("#name_en").keyup(function() {
+            data["name_en"] = $("#name_en").val();
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        $("#name_de").keyup(function() {
+            data["name_de"] = $("#name_de").val();
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        $("#name_fr").keyup(function() {
+            data["name_fr"] = $("#name_fr").val();
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        $("#size").change(function() {
+            data["size"] = $("#size").val();
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        $("#price").keyup(function() {
+            data["price"] = $("#price").val();
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        $('#image').change(function(e) {
+            data["image"] = this;
+            validation = validate(data);
+            activateButton(validation);
+        });
+
+        activateButton(validation);
+
+        $('#save_shirt').click(function(e) {
+            var formData = new FormData($('#shirt_form')[0]);
+            console.log(formData);
+
+            $.ajax({
+                'url': "<?= $this->getPlugin('router')->getBaseUrl() ?>",
+                'method': "POST",
+                'data': formData,
+                contentType: false,
+                processData: false,
+                'success': function(data) {
+                    console.log(data);
+                    $(location).attr('href', "<?= $this->getPlugin('router')->getBaseUrl() ?>?action=shirts")
+                },
+                'error': function(data) {
+                    console.log(data);
+                    alert("<?= $this->getPlugin('translator')->translate('shirts_form_error') ?>");
+                }
+            })
+        });
+    });
+
+    function init() {
+        $("#name_en").val('');
+        $("#name_de").val('');
+        $("#name_fr").val('');
+        $("#price").val('');
+        $("#image").val('');
+    }
+
+    function validate(data) {
+        var validation = false;
+
+        if (data["name_en"].length > 3) {
+            validation = data;
+        } else {
+            return false;
+        }
+
+        if (data["name_de"].length > 3) {
+            validation = true;
+        } else {
+            return false;
+        }
+
+        if (data["name_fr"].length > 3) {
+            validation = true;
+        } else {
+            return false;
+        }
+
+        if ("price" in data) {
+            validation = true;
+        } else {
+            return false;
+        }
+
+        if (data["image"].files !== 'undefined' && typeof FileReader !== 'undefined') {
+            var file = data["image"].files[0];
+
+            if (!/image\/(jpeg|jpg|png|gif)/.test(file.type)) {
+                alert('<?= $this->getPlugin("translator")->translate("shirts_form_file_type") ?> "' + file.type + '" <?= $this->getPlugin("translator")->translate("shirts_form_file_wrong") ?>');
+                return false;
+            }
+
+            validation = true;
+        }
+
+        return validation;
+    }
+
+    function activateButton(validation)
+    {
+        if (validation) {
+            $("#save_shirt").attr("disabled", false);
+        } else {
+            $("#save_shirt").attr("disabled", true);
+        }
+    }
+</script>
